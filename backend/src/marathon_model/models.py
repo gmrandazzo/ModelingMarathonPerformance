@@ -1,14 +1,17 @@
 from pydantic import BaseModel
 from typing import List
 
+
 class CalculationInput(BaseModel):
     vo2_max: float
     lactate_mmol: float
     economy_factor: float
 
+
 class CurrentPoint(BaseModel):
     vo2_lt: float
     speed: float
+
 
 class PlotDataPoint(BaseModel):
     vo2_lt: int
@@ -16,6 +19,7 @@ class PlotDataPoint(BaseModel):
     speed_low: float
     speed_avg: float
     speed_range: List[float]
+
 
 class CalculationResult(BaseModel):
     vo2_lt: float
