@@ -95,15 +95,15 @@ function App() {
                   ticks={[10, 12, 14, 16, 18, 20, 22, 24]}
                 />
                 <Tooltip 
-                  formatter={(value: number | [number, number], name: string) => {
+                  formatter={(value: any, name: string) => {
                     const displayName = String(name || "Value");
                     if (typeof value === 'number') {
                       return [`${value.toFixed(2)} km/h`, displayName];
                     }
-                    if (Array.isArray(value)) {
+                    if (Array.isArray(value) && typeof value[0] === 'number' && typeof value[1] === 'number') {
                       return [`${value[0].toFixed(2)} - ${value[1].toFixed(2)} km/h`, displayName];
                     }
-                    return [value, displayName];
+                    return [String(value), displayName];
                   }}
                   labelFormatter={(label) => `Supply (VO₂ at LT): ${label} ml/kg/min`}
                 />

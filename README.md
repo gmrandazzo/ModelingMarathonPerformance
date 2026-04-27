@@ -60,7 +60,7 @@ This will automatically build and orchestrate both the backend and frontend.
 ```bash
 docker-compose up --build
 ```
-Once the build is complete, open your browser to **`http://localhost`**.
+Once the build is complete, open your browser to **`http://localhost:8092`**.
 
 ### Option 2: Manual Development Setup
 
