@@ -11,7 +11,7 @@ import {
   Line,
   ReferenceDot
 } from 'recharts';
-import { ValueType } from 'recharts/types/component/DefaultTooltipContent';
+import type { ValueType } from 'recharts/types/component/DefaultTooltipContent';
 import './App.css';
 
 interface PlotData {
@@ -96,7 +96,8 @@ function App() {
                   ticks={[10, 12, 14, 16, 18, 20, 22, 24]}
                 />
                 <Tooltip 
-                  formatter={(value: ValueType | undefined, name: string) => {
+                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                  formatter={(value: ValueType | undefined, name: any) => {
                     const displayName = String(name || "Value");
                     if (typeof value === 'number') {
                       return [`${value.toFixed(2)} km/h`, displayName];
