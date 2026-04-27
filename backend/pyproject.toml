@@ -1,0 +1,30 @@
+[project]
+name = "marathon-model"
+version = "0.1.0"
+description = "Physiological modeling of marathon performance based on Joyner (1991)."
+dependencies = [
+    "fastapi",
+    "uvicorn",
+    "pydantic"
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest",
+    "httpx",
+    "mypy",
+    "pre-commit",
+    "ruff"
+]
+
+[tool.mypy]
+python_version = "3.14"
+strict = true
+ignore_missing_imports = true
+
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]

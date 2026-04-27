@@ -1,0 +1,10 @@
+fastapi
+uvicorn
+pydantic
+
+[dev]
+pytest
+httpx
+mypy
+pre-commit
+ruff
