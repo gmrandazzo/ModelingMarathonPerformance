@@ -68,13 +68,41 @@ jobs:
   docker-build:
     needs: [backend-tests, frontend-lint]
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
     steps:
       - uses: actions/checkout@v4
 
-      - name: Build Backend Image
-        run: |
-          docker build -t marathon-model-backend ./backend
+      - name: Log in to the Container registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Build Frontend Image
+      - name: Build and push Backend Image
         run: |
-          docker build -t marathon-model-frontend ./frontend
+          IMAGE_ID=ghcr.io/${{ github.repository_owner }}/marathon-model-backend
+          # Convert image ID to lowercase
+          IMAGE_ID=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]')
+          
+          docker build -t $IMAGE_ID:latest ./backend
+          
+          # Only push on main/master branches, not on PRs
+          if [ "${{ github.event_name }}" != "pull_request" ]; then
+            docker push $IMAGE_ID:latest
+          fi
+
+      - name: Build and push Frontend Image
+        run: |
+          IMAGE_ID=ghcr.io/${{ github.repository_owner }}/marathon-model-frontend
+          # Convert image ID to lowercase
+          IMAGE_ID=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]')
+          
+          docker build -t $IMAGE_ID:latest ./frontend
+          
+          # Only push on main/master branches, not on PRs
+          if [ "${{ github.event_name }}" != "pull_request" ]; then
+            docker push $IMAGE_ID:latest
+          fi
