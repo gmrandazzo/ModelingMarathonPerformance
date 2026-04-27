@@ -38,34 +38,34 @@ function App() {
   const [economyFactor, setEconomyFactor] = useState(0.5);
   const [result, setResult] = useState<CalculationResult | null>(null);
 
-  const calculate = async () => {
-    try {
-      const response = await fetch('/api/calculate', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          vo2_max: vo2Max,
-          lactate_mmol: lactateMmol,
-          economy_factor: economyFactor,
-        }),
-      });
-      if (!response.ok) {
-        console.error('API Error Status:', response.status);
-        const errorData = await response.json();
-        console.error('API Error Details:', errorData);
-        return;
-      }
-      const data = await response.json();
-      setResult(data);
-    } catch (error) {
-      console.error('Error calculating:', error);
-    }
-  };
-
   useEffect(() => {
-    calculate();
+    const calculate = async () => {
+      try {
+        const response = await fetch('/api/calculate', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            vo2_max: vo2Max,
+            lactate_mmol: lactateMmol,
+            economy_factor: economyFactor,
+          }),
+        });
+        if (!response.ok) {
+          console.error('API Error Status:', response.status);
+          const errorData = (await response.json()) as { message?: string };
+          console.error('API Error Details:', errorData);
+          return;
+        }
+        const data = (await response.json()) as CalculationResult;
+        setResult(data);
+      } catch (error) {
+        console.error('Error calculating:', error);
+      }
+    };
+
+    void calculate();
   }, [vo2Max, lactateMmol, economyFactor]);
 
   return (
@@ -95,7 +95,7 @@ function App() {
                   ticks={[10, 12, 14, 16, 18, 20, 22, 24]}
                 />
                 <Tooltip 
-                  formatter={(value: any, name: any) => {
+                  formatter={(value: number | [number, number], name: string) => {
                     const displayName = String(name || "Value");
                     if (typeof value === 'number') {
                       return [`${value.toFixed(2)} km/h`, displayName];
