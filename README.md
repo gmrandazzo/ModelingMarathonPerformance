@@ -1,5 +1,9 @@
 # Marathon Performance Modeler
 
+![Marathon Performance Modeler Preview](images/preview.png)
+
+**[🚀 Live Demo](https://marathonmodel.gmrandazzo.com/)**
+
 An interactive full-stack web application designed to model marathon running performance based on the physiological framework proposed by **Michael J. Joyner (1991)**.
 
 ## 🎯 Project Aim
