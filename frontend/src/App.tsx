@@ -96,7 +96,7 @@ function App() {
                   ticks={[10, 12, 14, 16, 18, 20, 22, 24]}
                 />
                 <Tooltip 
-                  formatter={(value: ValueType, name: string) => {
+                  formatter={(value: ValueType | undefined, name: string) => {
                     const displayName = String(name || "Value");
                     if (typeof value === 'number') {
                       return [`${value.toFixed(2)} km/h`, displayName];
