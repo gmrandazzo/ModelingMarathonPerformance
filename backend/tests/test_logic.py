@@ -1,4 +1,9 @@
-from marathon_model.logic import calculate_lt_percent, calculate_speed_raw, format_time
+from marathon_model.logic import (
+    calculate_lt_percent,
+    calculate_speed_raw,
+    format_time,
+    calculate_tanda_speed,
+)
 
 
 def test_calculate_lt_percent():
@@ -28,3 +33,15 @@ def test_calculate_speed_raw():
 def test_format_time():
     assert format_time(21.1) == "1:59:59"  # Roughly 2 hours
     assert format_time(10.0) == "4:13:10"
+
+
+def test_calculate_tanda_speed():
+    # Example calculation
+    # K = 100 km/week
+    # P = 300 sec/km (5:00 min/km)
+    # Pm = 17.1 + 140 * exp(-0.0053 * 100) + 0.55 * 300
+    # Pm = 17.1 + 140 * 0.5886 + 165
+    # Pm = 17.1 + 82.404 + 165 = 264.504 sec/km
+    # Speed = 3600 / 264.504 = 13.61 km/h
+    speed = calculate_tanda_speed(100.0, 300.0)
+    assert 13.6 <= speed <= 13.7
