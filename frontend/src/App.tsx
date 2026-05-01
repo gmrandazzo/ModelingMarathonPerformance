@@ -10,7 +10,8 @@ import {
   ComposedChart,
   Line,
   ReferenceDot,
-  Scatter
+  Scatter,
+  ReferenceArea
 } from 'recharts';
 import type { ValueType } from 'recharts/types/component/DefaultTooltipContent';
 import './App.css';
@@ -26,6 +27,7 @@ interface PlotData {
 interface TandaPlotData {
   training_weekly_km: number;
   predicted_pace_sec_km: number;
+  study_baseline_pace_sec_km: number;
 }
 
 interface TandaStudyPoint {
@@ -287,23 +289,24 @@ function App() {
                   >
                     <CartesianGrid strokeDasharray="3 3" vertical={false} />
                     <XAxis 
-                      dataKey="training_weekly_km" 
                       type="number"
+                      dataKey="training_weekly_km"
                       name="Distance"
                       unit="km"
                       domain={[30, 150]}
                       label={{ value: 'Weekly Distance (km)', position: 'bottom', offset: 40 }} 
                     />
                     <YAxis 
-                      dataKey="predicted_pace_sec_km"
                       type="number"
+                      dataKey="predicted_pace_sec_km"
                       name="Pace"
                       unit="s/km"
-                      reversed
+                      domain={[320, 220]}
+                      ticks={[320, 300, 280, 260, 240, 220]}
                       label={{ value: 'Pace (sec/km)', angle: -90, position: 'insideLeft', offset: -20 }} 
-                      domain={['auto', 'auto']}
                     />
                     <Tooltip 
+                      cursor={{ strokeDasharray: '3 3' }}
                       formatter={(value: ValueType | undefined, name: any) => {
                         if (typeof value === 'number') {
                           const min = Math.floor(value / 60);
@@ -315,17 +318,42 @@ function App() {
                     />
                     <Legend verticalAlign="top" height={50} iconType="circle"/>
                     
+                    {/* Validity Range Area */}
+                    <ReferenceArea
+                      x1={40}
+                      x2={111}
+                      y1={307}
+                      y2={237}
+                      stroke="none"
+                      fill="#f0f0f0"
+                      fillOpacity={0.4}
+                      label={{ value: 'Model Validity Range', position: 'top', fill: '#888', fontSize: 10 }}
+                    />
+
                     {/* Raw Study Data */}
                     <Scatter
                       name="Tanda Study Data (n=46)"
                       data={result.tanda_study_data?.map(p => ({ training_weekly_km: p.k, predicted_pace_sec_km: p.pm }))}
                       fill="#8884d8"
-                      opacity={0.5}
+                      line={false}
                     />
 
-                    {/* Model Regression Line */}
+                    {/* Study Baseline Line (P=284.6) */}
                     <Line
-                      name="Tanda Model Prediction"
+                      name="Study Mean Regression (P=284.6)"
+                      data={result.tanda_plot_data}
+                      type="monotone"
+                      dataKey="study_baseline_pace_sec_km"
+                      stroke="#82ca9d"
+                      strokeDasharray="5 5"
+                      dot={false}
+                      strokeWidth={2}
+                      isAnimationActive={false}
+                    />
+
+                    {/* Model Prediction Line */}
+                    <Line
+                      name="Your Tanda Prediction"
                       data={result.tanda_plot_data}
                       type="monotone"
                       dataKey="predicted_pace_sec_km"
